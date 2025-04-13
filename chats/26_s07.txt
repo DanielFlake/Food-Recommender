@@ -1,0 +1,60 @@
+[2024-12-04 22:22:24] s07
+Ciao!
+
+[2024-12-04 22:22:26] assistant
+Ciao Emanuele! Sono felice di aiutarti a fare scelte alimentari sostenibili e salutari. Per iniziare, vorrei chiederti: quanti anni hai?
+
+[2024-12-04 22:22:34] s07
+22
+
+[2024-12-04 22:22:35] assistant
+Grazie per la conferma, Emanuele! Notato che non hai specificato il tuo genere, ti chiedo: sei maschio o femmina?
+
+[2024-12-04 22:22:47] s07
+maschio
+
+[2024-12-04 22:22:51] assistant
+Ok, Emanuele! Notato che non hai menzionato allergie alimentari, vorrei chiederti: hai delle allergie alimentari o intolleranze di cui dovrei essere a conoscenza?
+
+[2024-12-04 22:23:33] s07
+no
+
+[2024-12-04 22:23:34] assistant
+Ok, Emanuele! Sono felice di aiutarti a fare scelte alimentari sostenibili e salutari. Qual è il tuo obiettivo alimentare attuale? Stai cercando di perdere peso, mantenere il tuo peso attuale o semplicemente mangiare sano?
+
+[2024-12-04 22:23:49] s07
+mantenere il peso attuale
+
+[2024-12-04 22:23:53] assistant
+Ok, Emanuele! Per aiutarti a mantenere il tuo peso attuale, vorrei sapere: quali sono i tuoi ingredienti preferiti o disprezzati? Ciò mi aiuterà a suggerirti opzioni alimentari più personalizzate e sostenibili.
+
+[2024-12-04 22:24:09] s07
+mi piacciono latticini salumi nutella
+
+[2024-12-04 22:24:10] assistant
+Ok, Emanuele! Notato! Latticini, salumi e Nutella sono i tuoi ingredienti preferiti. Sono felice di aiutarti a scoprire come inserirli in un'alimentazione equilibrata e sostenibile. Vorrei sapere: stai pianificando un pasto o una spesa alimentare in particolare?
+
+[2024-12-04 22:24:33] s07
+al momento no
+
+[2024-12-04 22:24:34] assistant
+Ok, Emanuele! No problem! Sono qui per te quando avrai bisogno di aiuto. Nel frattempo, vorrei ricordarti che i latticini e i salumi possono essere fonti di proteine e nutrienti importanti, ma è anche importante essere consapevole delle loro conseguenze ambientali e della loro influenza sulla tua salute. La moderazione è chiave! Se hai domande o hai bisogno di suggerimenti, non esitare a chiedere.
+
+[2024-12-04 22:25:06] s07
+Puoi suggerirmi qualche ricetta con mozzarella
+
+[2024-12-04 22:25:12] assistant
+Ecco cosa ho trovato: {{widget}}
+
+[2024-12-04 22:25:28] s07
+cos'è la nocciolata
+
+[2024-12-04 22:25:29] assistant
+Emanuele! La Nocciolata è un marchio di crema di nocciola, molto simile alla Nutella! È un ingrediente delizioso e popolare in Italia. Se vuoi, posso suggerirti alcune ricette che combinano la mozzarella con la Nocciolata o la Nutella. Sarebbe un'ottima scusa per indulgere nel tuo amore per i latticini e i tuoi ingredienti preferiti!
+
+[2024-12-04 22:26:25] s07
+nono grazie
+
+[2024-12-04 22:26:26] assistant
+Ok, Emanuele! Non c'è problema. Se cambi idea e vuoi scoprire nuove idee per ricette con mozzarella, sono qui per aiutarti. In caso contrario, posso offrire suggerimenti su come scegliere opzioni alimentari più sostenibili e salutari che si adattano alle tue preferenze.
+

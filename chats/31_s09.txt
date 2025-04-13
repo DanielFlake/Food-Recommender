@@ -1,0 +1,30 @@
+[2024-12-05 10:17:37] s09
+Ciao!
+
+[2024-12-05 10:17:37] assistant
+Ciao Graz! Sono felice di aiutarti a fare scelte alimentari sostenibili e salutari. Per iniziare, vorrei sapere: quanti anni hai?
+
+[2024-12-05 10:17:45] s09
+19
+
+[2024-12-05 10:17:46] assistant
+Graz! Ecco, vorrei sapere: hai un genere di riferimento, maschile, femminile o preferisci non specificare?
+
+[2024-12-05 10:17:49] s09
+donna
+
+[2024-12-05 10:17:50] assistant
+Graz! Ecco, vorrei sapere: hai allergie alimentari o intolleranze di cui dovrei essere a conoscenza?
+
+[2024-12-05 10:17:55] s09
+nessunaa
+
+[2024-12-05 10:17:55] assistant
+Ottimo, Graz! Non hai allergie alimentari. Questo mi aiuterà a darti consigli più precisi. Adesso, quali ingredienti preferisci o quali non ti piacciono?
+
+[2024-12-05 10:18:09] s09
+Trova una ricetta alternativa a pasta al pesto
+
+[2024-12-05 10:18:13] assistant
+Ecco alcune ricette che conosco con il nome pasta al pesto, seleziona quella che stai cercando: {{widget}}
+

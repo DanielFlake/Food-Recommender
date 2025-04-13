@@ -8,6 +8,7 @@ import json
 import re
 from json import dumps
 import emoji
+import os
 import string
 import random
 import ast
@@ -16,7 +17,7 @@ import webbrowser
 import csv
 
 # Definizione di una variabile globale
-model_name="swap-uniba/LLaMAntino-3-ANITA-8B-Inst-DPO-ITA"
+model_name="/home/fiocco/Food-Recommender/anita/"
 inizio_sequenza = "<|begin_of_text|>"
 fine_sequenza = "<|eot_id|>"
 inizio_intestazione = "<|start_header_id|>"
@@ -41,7 +42,8 @@ def sostituisci_cibi_con_emoji(testo):
     return testo
 
 def pulizia_testo(testo):
-    cleaned_text = re.sub(r'<.*?>', '', text)
+    cleaned_text = re.sub(r'<.*?>', '', testo)
+    cleaned_text = re.sub(r"assistant\S*\s*", "", cleaned_text, flags=re.IGNORECASE)
     return cleaned_text
 
 
@@ -82,6 +84,7 @@ def invia_questionario( q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, 
     dati1=[
       [q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,q12,q13,q14,q15,q16,q17,q18,q19,q20,q21,q22,q23,q24]
     ]
+    os.makedirs("./Test/", exist_ok=True)
     nome_file="./Test/"+ str(q1) + ".txt"
     with open(nome_file, 'a') as file:
         file.write("\nQuestionario di valutazione\n")
@@ -109,12 +112,15 @@ def format_message_ita(message: str, history: list, user_info, memory_limit: int
     for key in user_info:
       if user_info[key] is None:
            missing_info.append(key)
-    
+    print(history)
 
-    system_message = inizio_intestazione + "<<SYS>>\n" \
+    system_message = inizio_intestazione + \
          "Sei un assistente disponibile, rispettoso e onesto e un recommender di ricette esperto in salute e sostenibilità di nome ANITA " \
          "(Advanced Natural-based interaction for the ITAlian language)." \
-         "Rispondi nella lingua italiana in modo chiaro, semplice ed esaustivo." \
+         "Rispondi SEMPRE e SOLO in italiano, indipendentemente dalla lingua della domanda dell'utente." \
+         "Se l'utente scrive in un'altra lingua, traduci la sua richiesta in italiano e rispondi esclusivamente in italiano." \
+         "Rispondi in modo chiaro, semplice ed esaustivo." \
+         "Non usare l'inglese o altre lingue per nessun motivo." \
          "Rispondi sempre nel modo piu' utile possibile, pur essendo sicuro. Lo stile delle tue risposte è persuasivo. " \
          "Nelle risposte elimina i suggerimenti di riposte che vorresti ottenere dall'utente."\
          "Prediligi risposte di massimo 3-5 righi."\
@@ -122,23 +128,43 @@ def format_message_ita(message: str, history: list, user_info, memory_limit: int
          "Le risposte non devono includere contenuti dannosi, non etici, razzisti, sessisti, tossici, pericolosi o illegali. " \
          "Se non conosci la risposta a una domanda, non condividere informazioni false.\n" \
          "Le informazioni attualmente note sull'utente sono le seguenti: "+dumps(user_info)+"Fa all'utente domande sul suo nome, le sue allergie, le sue restrizioni alimentari"\
-         "e i suoi ingredienti preferiti per conoscerlo meglio."\
-         "<</SYS>>\n\n" \
-
+         "e i suoi ingredienti preferiti per conoscerlo meglio."
+    chat_messages = [{"role": "system", "content": system_message}]
 # always keep len(history) <= memory_limit
     if len(history) > memory_limit:
         history = history[-memory_limit:]
+    
+    for turn in history:
+      for msg in turn:
+          if "Chatbot" in msg:
+            role = 'assistant'
+            msg = msg.replace('Chatbot:', '').strip()
+          elif 'Utente' in msg:
+            role = 'user'
+            msg = msg.replace('Utente:', '').strip()
+          chat_messages.append({
+          'role': role,
+          'content': msg
+          })
+    chat_messages.append({
+          'role': 'user',
+          'content': message
+          })
+    formatted_message = tokenizer.apply_chat_template(
+        chat_messages,  
+        tokenize=False,
+        add_generation_prompt=False )
 
-    if len(history) == 0:
-        return system_message + f"{message} {fine_intestazione}"
+    #if len(history) == 0:
+    #    return system_message + f"{message} {fine_intestazione}"
 
-    formatted_message = system_message + f"{history[0][0]} {fine_intestazione} {history[0][1]} {fine_sequenza}"
+    #formatted_message = system_message + f"{history[0][0]} {fine_intestazione} {history[0][1]} {fine_sequenza}"
     # Handle conversation history
-    for user_msg, model_answer in history[1:]:
-        formatted_message += f"{inizio_sequenza} {inizio_intestazione} {user_msg} {fine_intestazione} {model_answer} {fine_sequenza}"
+    #for user_msg, model_answer in history[1:]:
+    #    formatted_message += f"{inizio_sequenza} {inizio_intestazione} {user_msg} {fine_intestazione} {model_answer} {fine_sequenza}"
     # Handle the current message
-    formatted_message += f"{inizio_sequenza} {inizio_intestazione}  {message} {fine_intestazione}"
-
+    #formatted_message += f"{inizio_sequenza} {inizio_intestazione}  {message} {fine_intestazione}"
+    print(formatted_message)
     return formatted_message
 
 # Formatting function for the Italian json query
@@ -185,8 +211,8 @@ if __name__ == "__main__":
     bnb_4bit_compute_dtype=torch.bfloat16,
     )
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=bnb_config)
-    dictionary = {"nome": None, "età": None, "sesso": None, "allergie alimentari": None, "ingredienti preferiti": None, "ingredienti non graditi": None, "obiettivo di peso": None,        "malattie": None, "restrizioni alimentari": None}
+    model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=bnb_config, device_map='cuda')
+    dictionary = {"nome": None, "eta": None, "sesso": None, "allergie alimentari": None, "ingredienti preferiti": None, "ingredienti non graditi": None, "obiettivo di peso": None, "malattie": None, "restrizioni alimentari": None}
     # Define the pipeline
     llama_pipeline = pipeline(
         "text-generation",
@@ -370,23 +396,49 @@ if __name__ == "__main__":
         generated_text = sequences[0]['generated_text']
         response = generated_text[len(query):]  # Remove the prompt from the output
 
-        lm = llama2 + json_query + gen(name="json", temperature=0.01, max_tokens=128, stop='```')
+        lm = llama2 + json_query + gen(
+            name="json",
+            temperature=0.01,
+            max_tokens=128,
+            stop='```',
+          )                                                                               #sostituire, vedere se esistono dei NER specifici per il cibo, vari modelli su Hugging Face
+        
+        print("Risposta del bot (prima della pulizia):", response)
+        
+        print("DEBUG - Output del modello:")
+        print(lm['json'])
+
         try:
-            json_file = json.loads(re.search('({.+})', lm['json']).group(0).replace("'", '"'))
+          # Cerca l'intero blocco JSON usando una regex più robusta
+          match = re.search(r'\{[\s\S]*\}', lm['json'])
+          if match:
+              json_str = match.group(0)
+              # Pulizia
+              json_str = json_str.replace("'", '"').replace("True", "true").replace("False", "false")
+              # Rimuovi eventuali caratteri non-JSON rimanenti
+              json_str = re.sub(r'[^\x00-\x7F]+', '', json_str)  # Rimuove caratteri non-ASCII
+              json_str = re.sub(r'(?<!\\)\\(?!["\\/bfnrt]|u[0-9a-fA-F]{4})', '', json_str)  # Rimuove escape non validi
+              
+              json_file = json.loads(json_str)
+              print("DEBUG - Output del modello:")
+              print(json_str)
+          else:
+              print("Nessun JSON valido trovato in:", lm['json'])
         except json.JSONDecodeError as e:
-            print(f"Errore nel decodificare il Json:{e}")
-        except AttributeError as e:
-            print(f"Errore nel decodificare il Json:{e}")
+          print(f"Errore decodifica JSON: {e}\nStringa: {json_str}")
+        except Exception as e:
+          print(f"Errore generale: {e}")
         print(json_file)
         torch.cuda.empty_cache()
         testo = pulizia_testo(response.strip())
         testo_con_emoji=sostituisci_cibi_con_emoji(testo)
-        history.append(("Utente: "+message, "Chatbot: "+testo_con_emoji))
+        history.append(("Utente: "+message, "Chatbot (Anita): "+testo_con_emoji))
+        os.makedirs("./Test/", exist_ok=True)
         nome_file ="./Test/"+ str(username) + ".txt"
         with open(nome_file, 'a', encoding='utf-8') as file:
             file.write("\n\nUtente: "+message +"\n")
-            file.write("Chatbot: "+testo +"\n")
-        latest_interaction = "Utente: "+message+" Chatbot: "+response.strip()
+            file.write("Chatbot (Anita): "+testo +"\n")
+        latest_interaction = "Utente: "+message+" Chatbot (Anita): "+response.strip()
         return "", history, json_file,username,latest_interaction
   
       message.submit(get_llamantino_response, [message, history, json_file,username,latest_interaction], [message, history, json_file,username,latest_interaction])
